@@ -5,7 +5,7 @@ const axios = require('axios'); // Import axios for HTTP requests
 const app = express();
 
 app.use(cors({
-    origin: '*', // Allow all origins, but restrict this in production for security
+    origin: 'https://tunes-stream.vercel.app', // Allow all origins, but restrict this in production for security
 }));
 
 // Trending Now Route
