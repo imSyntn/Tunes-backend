@@ -1,7 +1,7 @@
 const { varifyToken } = require('../Utils/jwtTokens')
 
 const RestrictToUser = (req, res, next) => {
-    const uid = req.cookies?.uid
+    const uid = req.cookies?.uid;
 
     const validUser = varifyToken(uid)
 

@@ -18,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if (user) {
 
-        const createUserData = await UserDataModel.create({ userId: user._id })
+        const createUserData = await UserDataModel.create({ userId: user.id, songs: [], albums: [], playlists: [] })
 
         const token = generateToken({
             id: user._id,
@@ -26,8 +26,8 @@ const registerUser = asyncHandler(async (req, res) => {
         })
         res.status(201)
             .cookie('uid', token, {
-                httpOnly: false, // Accessible only by web server
-                secure: true, // HTTPS only in production
+                httpOnly: false,
+                secure: true,
                 sameSite: 'None'
             })
             .json({
@@ -41,15 +41,19 @@ const registerUser = asyncHandler(async (req, res) => {
 const authUser = asyncHandler(async (req, res) => {
     const token = req.cookies?.uid;
 
-    if (token) {
+    const { email, password } = req.body;
+
+    if (token && !email && !password) {
         const jwt = varifyToken(token)
-        if(jwt) {
+        const isUserExist = await User.findById(jwt.id)
+        if(jwt && isUserExist) {
             // const isUserExist = await User.findOne({ jwt })
             return res.status(201).json({ ...jwt, loggedIn: true })
+        } else {
+            return res.json({msg: 'Cookie is not valid'})
         }
     }
 
-    const { email, password } = req.body;
 
     const user = (email && password) ? await User.findOne({ email }) : undefined;
 

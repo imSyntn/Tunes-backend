@@ -3,9 +3,10 @@ const asyncHandler = require('express-async-handler')
 
 const sendData = asyncHandler(async (req, res) => {
     const { id } = req.jwtPayload;
+    // console.log(id)
     const userData = await UserDataModel.findOne({userId: id})
     if (userData) res.status(200).json(userData)
-    else res.status(200).json({ data: false })
+    else res.status(200).json({ mag: "User doesno't exist.", data: false })
 })
 
 const storeData = asyncHandler(async (req, res) => {
